@@ -1,6 +1,8 @@
 from twitter.domain.account import Account
+from twitter.json.encoder import ISerializable
 
-class Tweet:
+
+class Tweet(ISerializable):
     account: Account
     date: str
     hashtags: [str]
@@ -8,3 +10,6 @@ class Tweet:
     replies: int
     retweets: int
     text: str
+
+    def serialize(self) -> dict:
+        return self.__dict__
