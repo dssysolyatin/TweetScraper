@@ -1,0 +1,11 @@
+language: python
+python:
+  - 3.6
+
+env:
+  - LAMBDA_FUNCTION=hashtag_tweets
+  - LAMBDA_FUNCTION=users_tweets
+
+install: pip install --user -r lambda/${LAMBDA_FUNCTION}/requirements.txt
+
+script: make unit_tests

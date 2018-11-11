@@ -1,0 +1,1 @@
+import tests.unit.twitter.test_extractor

@@ -7,7 +7,6 @@ define build_lamda_function
 	cp -R twitter build/$(1)
 endef
 
-
 build: build_hashtag_tweets build_users_tweets
 
 build_hashtag_tweets:
@@ -15,5 +14,8 @@ build_hashtag_tweets:
 
 build_users_tweets:
 	$(call build_lamda_function,users_tweets)
+
+unit_tests:
+	python -m unittest discover
 
 .PHONY: build build_hashtag_tweets build_users_tweets
