@@ -10,6 +10,15 @@ TweetScraper is a serverless application for scraping tweets from twitter by has
 - No need to fire alerts or write scripts to scale up and down
 - Don't have to pay for idle capacity
 
+
+## Sandbox
+
+Get tweets by hashtag - https://gyexpx2j0m.execute-api.eu-central-1.amazonaws.com/Prod/hashtags/<hashtag>
+Get tweets by username - https://gyexpx2j0m.execute-api.eu-central-1.amazonaws.com/Prod/users/<username>
+
+## CI
+https://travis-ci.org/bestreyer/TweetScraper
+
 ## Run locally
 
 ### Requirements
@@ -33,9 +42,6 @@ make start_api
 ```bash
 make unit_tests
 ```
-
-## CI
-https://travis-ci.org/bestreyer/TweetScraper
 
 ## Packaging and deployment
 ```bash
