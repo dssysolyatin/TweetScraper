@@ -1,1 +1,1 @@
-import tests.unit.twitter.test_extractor
+import tests.unit.twitter.client.test_parser

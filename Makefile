@@ -1,10 +1,11 @@
-# $(call build_lamda_function,lambda_function_name)
-#   Build lambda function.
+# $(call build_lamda_function,lambda_function_function_name)
+#   Build lambda_function_function function.
 define build_lamda_function
 	mkdir -p build/$(1)/app
-	pip install -r lambda/$(1)/requirements.txt -t build/$(1)
-	cp lambda/$(1)/* build/$(1)/app
+	pip install -r lambda_function/$(1)/requirements.txt -t build/$(1)
+	cp lambda_function/$(1)/* build/$(1)/app
 	cp -R twitter build/$(1)
+	cp -R tests build/$(1)
 endef
 
 build: build_hashtag_tweets build_users_tweets

@@ -8,7 +8,7 @@ from twitter.client.parser import IParser
 class IClient(metaclass=abc.ABCMeta):
 
     @abc.abstractmethod
-    def search_tweets(self, query: str, limit: int = 100) -> [Tweet]:
+    def search_tweets(self, query: str, limit: int = 30) -> [Tweet]:
         pass
 
 

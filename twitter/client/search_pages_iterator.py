@@ -43,6 +43,8 @@ class SearchPagesIterator(Iterator):
         if not json["has_more_items"] and self._min_position == json["min_position"]:
             self._has_more_items = False
 
+        self._min_position = json["min_position"]
+
         return json["items_html"]
 
     def _first_search(self):
