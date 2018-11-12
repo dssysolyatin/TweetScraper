@@ -18,6 +18,11 @@ TweetScraper is a serverless application for scraping tweets from twitter by has
 - make
 - docker
 
+### Create environment
+```bash
+python3 -m venv venv
+source ./venv/bin/activate
+```
 
 ### Run api
 ```bash

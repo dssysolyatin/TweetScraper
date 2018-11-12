@@ -49,7 +49,7 @@ Resources:
                   x-amazon-apigateway-integration:
                     responses: {}
                     uri:
-                      Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda_function:path/2015-03-31/lambda_function/${HashtagTweetsLambda.Arn}/invocations
+                      Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${HashtagTweetsLambda.Arn}/invocations
                     httpMethod: "POST"
                     type: "aws_proxy"
 
@@ -82,45 +82,48 @@ Resources:
                   x-amazon-apigateway-integration:
                     responses: {}
                     uri:
-                      Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda_function:path/2015-03-31/lambda_function/${UserTweetsLambda.Arn}/invocations
+                      Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${UserTweetsLambda.Arn}/invocations
                     httpMethod: "POST"
                     type: "aws_proxy"
 
-              definitions:
-                Account:
-                  type: object
-                  properties:
-                    fullname:
-                      type: string
-                    href:
-                      type: string
-                    id:
-                      type: integer
+            definitions:
+              Account:
+                type: object
+                properties:
+                  fullname:
+                    type: string
+                  href:
+                    type: string
+                  id:
+                    type: integer
 
-                Tweet:
-                  type: object
-                  properties:
-                    account:
-                      $ref: '#/definitions/Account'
-                    date:
+              Tweet:
+                type: object
+                properties:
+                  account:
+                    $ref: '#/definitions/Account'
+                  date:
+                    type: string
+                  hashtags:
+                    type: array
+                    items:
                       type: string
-                    hashtags:
-                      type: array
-                      items:
-                        type: string
-                    likes:
-                      type: integer
-                    replies:
-                      type: integer
-                    retweets:
-                      type: integer
-                    text:
-                      type: string
+                  likes:
+                    type: integer
+                  replies:
+                    type: integer
+                  retweets:
+                    type: integer
+                  text:
+                    type: string
 
-                Tweets:
-                  type: array
-                  items:
-                    $ref: '#/definitions/Tweet'
+              Tweets:
+                type: array
+                items:
+                  $ref: '#/definitions/Tweet'
+        DependsOn:
+            - UserTweetsLambda
+            - HashtagTweetsLambda
 
     ConfigHashtagTweetsLambdaPermission:
         Type: "AWS::Lambda::Permission"
@@ -128,7 +131,7 @@ Resources:
             - ApiGateway
             - HashtagTweetsLambda
         Properties:
-            Action: lambda_function:InvokeFunction
+            Action: lambda:InvokeFunction
             FunctionName: !Ref HashtagTweetsLambda
             Principal: apigateway.amazonaws.com
 
@@ -138,7 +141,7 @@ Resources:
             - ApiGateway
             - UserTweetsLambda
         Properties:
-            Action: lambda_function:InvokeFunction
+            Action: lambda:InvokeFunction
             FunctionName: !Ref UserTweetsLambda
             Principal: apigateway.amazonaws.com
 
@@ -148,24 +151,12 @@ Resources:
         Properties:
             CodeUri: build/hashtag_tweets/
             Handler: app.handler.handle
-            Events:
-                HelloWorld:
-                    Type: Api
-                    Properties:
-                        Path: /hashtags/{hashtag}
-                        Method: get
 
     UserTweetsLambda:
         Type: AWS::Serverless::Function
         Properties:
             CodeUri: build/users_tweets/
             Handler: app.handler.handle
-            Events:
-                HelloWorld:
-                    Type: Api
-                    Properties:
-                        Path: /users/{username}
-                        Method: get
 Outputs:
   ApiUrl:
     Description: URL of your API endpoint
