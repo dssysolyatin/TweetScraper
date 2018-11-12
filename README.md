@@ -13,9 +13,9 @@ TweetScraper is a serverless application for scraping tweets from twitter by has
 
 ## Sandbox
 
-Get tweets by hashtag - https://gyexpx2j0m.execute-api.eu-central-1.amazonaws.com/Prod/hashtags/<hashtag>
+Get tweets by hashtag - `https://gyexpx2j0m.execute-api.eu-central-1.amazonaws.com/Prod/hashtags/{hashtag}`
 
-Get tweets by username - https://gyexpx2j0m.execute-api.eu-central-1.amazonaws.com/Prod/users/<username>
+Get tweets by username - `https://gyexpx2j0m.execute-api.eu-central-1.amazonaws.com/Prod/users/{username}`
 
 ## CI
 https://travis-ci.org/bestreyer/TweetScraper
