@@ -2,21 +2,21 @@
 
 TweetScraper is a serverless application for scraping tweets from twitter by hashtag or username
 
-[![Serverless chart](docs/serverless.png)]
+![Serverless chart](docs/serverless.png)
 
 ## Why serverless ?
 
 - No need to manage a server
 - No need to fire alerts or write scripts to scale up and down
-- 
+- Don't have to pay for idle capacity
 
 ## Run locally
 
 ### Requirements
-- python 3.6
-- venv
+- python 3.6 with venv
 - [AWS SAM](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html)
 - make
+- docker
 
 
 ### Run api
@@ -28,6 +28,9 @@ make start_api
 ```bash
 make unit_tests
 ```
+
+## CI
+https://travis-ci.org/bestreyer/TweetScraper
 
 ## Packaging and deployment
 ```bash
