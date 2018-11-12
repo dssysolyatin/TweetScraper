@@ -5,6 +5,7 @@ from twitter.repository.tweetrepo import TweetRepo
 
 
 def handle(event: dict, _):
+
     client_factory = Factory()
     client = client_factory.create()
     repo = TweetRepo(client)

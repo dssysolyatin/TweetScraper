@@ -5,46 +5,94 @@ Description: >
 
 Globals:
     Function:
-        Timeout: 3
-
+        Runtime: python3.6
+        Timeout: 60
 
 Resources:
+    ApiGateway:
+        Type: AWS::Serverless::Api
+        Properties:
+          StageName: Prod
+          DefinitionBody:
+            swagger: 2.0
+            info:
+              title:
+                Ref: AWS::StackName
+            paths:
+              /hashtags/{hashtag}:
+                get:
+                  tags:
+                    - "Tweet"
+                  parameters:
+                    - name: hashtag
+                      description: A hashtag by which tweets will be gotten.
+                      in: path
+                      type: string
+                      minLength: 1
+                      maxLength: 64
+                      pattern: '^\S{1,64}$'
+                      required: true
+                    - name: limit
+                      description: Maximum number of tweets in response.
+                      in: query
+                      type: integer
+                      minimum: 0
+                      maximum: 1000
+                      default: 30
+                      required: false
+                  responses:
+                    '200':
+                      description: 'Returns tweets by hashtag'
+                      schema:
+                        $ref: '#/definitions/Tweets'
 
-    HashtagTweets:
-        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+                  x-amazon-apigateway-integration:
+                    responses: {}
+                    uri:
+                      Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${HashtagTweetsLambda.Arn}/invocations
+                    httpMethod: "POST"
+                    type: "aws_proxy"
+
+    ConfigLambdaPermission:
+        Type: "AWS::Lambda::Permission"
+        DependsOn:
+            - ApiGateway
+            - HashtagTweetsLambda
+        Properties:
+            Action: lambda:InvokeFunction
+            FunctionName: !Ref HashtagTweetsLambda
+            Principal: apigateway.amazonaws.com
+
+    HashtagTweetsLambda:
+        Type: AWS::Serverless::Function
         Properties:
             CodeUri: build/hashtag_tweets/
             Handler: app.handler.handle
-            Runtime: python3.6
             Events:
                 HelloWorld:
-                    Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+                    Type: Api
                     Properties:
                         Path: /hashtags/{hashtag}
                         Method: get
-    UserTweets:
-        Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+
+    UserTweetsLambda:
+        Type: AWS::Serverless::Function
         Properties:
             CodeUri: build/users_tweets/
             Handler: app.handler.handle
-            Runtime: python3.6
             Events:
                 HelloWorld:
-                    Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+                    Type: Api
                     Properties:
                         Path: /users/{username}
                         Method: get
-
 Outputs:
-
-    HelloWorldApi:
-      Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-      Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-
-    HelloWorldFunction:
-      Description: "Hello World Lambda Function ARN"
-      Value: !GetAtt HelloWorldFunction.Arn
-
-    HelloWorldFunctionIamRole:
-      Description: "Implicit IAM Role created for Hello World function"
-      Value: !GetAtt HelloWorldFunctionRole.Arn
+  ApiUrl:
+    Description: URL of your API endpoint
+    Value: !Join
+      - ''
+      - - https://
+        - !Ref ApiGateway
+        - '.execute-api.'
+        - !Ref 'AWS::Region'
+        - '.amazonaws.com/Prod'
