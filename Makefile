@@ -3,9 +3,9 @@
 define build_lamda_function
 	mkdir -p build/$(1)/app
 	pip install -r lambda_function/$(1)/requirements.txt -t build/$(1)
-	cp lambda_function/$(1)/* build/$(1)/app
+	cp -R lambda_function/$(1)/* build/$(1)/app
 	cp -R twitter build/$(1)
-	cp -R tests build/$(1)
+	cp -R lambda_helper build/$(1)
 endef
 
 build: build_hashtag_tweets build_users_tweets
